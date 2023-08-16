@@ -14,7 +14,9 @@ from django.db.models import Q, Count
 
 from .models import *
 
-'''показать все посты'''
+
+
+# показать все посыт
 def products_all(request):
     model = Product.objects.all()
     categories = Category.objects.filter(parent_category=None)
@@ -23,6 +25,9 @@ def products_all(request):
         'categories': categories,
     }
     return render(request,'product_list.html',context)
+
+
+
 
 '''показать посты для категории'''
 def products_cat(request,cat_slug):
@@ -35,6 +40,9 @@ def products_cat(request,cat_slug):
         'cat_selected':cat_selected,
                }
     return render(request,'product_list.html',context)
+
+
+
 
 '''показать страницу для определенного поста'''
 class ProductDetailView(DetailView):
@@ -50,11 +58,18 @@ class ProductDetailView(DetailView):
         return context
 
 
+
+
+
 '''страница регистрации с формой и переодрессацией после регистрациии'''
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
+
+
+
+
 
 '''страница для редактирования постов'''
 @login_required
@@ -64,7 +79,7 @@ def edit_product(request,prod_id):
     product = get_object_or_404(Product,id=prod_id)
     if request.method == 'POST':
         post_form = ProductCreate(request.POST,request.FILES,instance=product)
-        formset = ImageFormSet(request.POST,request.FILES,queryset=ProductImage.objects.filter(post=product))
+        formset = ImageFormSet(request.POST,request.FILES,queryset=ProductImage.objects.none())
         if post_form.is_valid() and formset.is_valid():
             post_form.save()
             for form in formset:
@@ -84,10 +99,17 @@ def edit_product(request,prod_id):
     return render(request,'add_product.html',context)
 
 
+
+
+
+
 '''страница с профилем'''
 def profile(request,user_id):
     profile = CustomUser.objects.get(id=user_id)
     return render(request,'profile.html',{'profile':profile})
+
+
+
 
 
 '''отвечает за поиск постов по заголовку'''
@@ -105,6 +127,10 @@ class SearchResponceList(ListView):
         context['q'] = f'q={self.request.GET.get("q")}&'
         return context
 
+
+
+
+
 '''добавить комментарий'''
 class AddComment(View):
     def post(self,request,id):
@@ -117,6 +143,10 @@ class AddComment(View):
             return redirect('/')
         else:
             return HttpResponseRedirect('/')
+
+
+
+
 
 '''ответить на комментарий'''
 class RespondComment(View):
@@ -133,6 +163,8 @@ class RespondComment(View):
             return HttpResponseRedirect('/')
 
 
+
+# отправка формы о создании поста
 @login_required
 def post(request):
     ImageFormSet = modelformset_factory(ProductImage,ImageForm,extra=3,can_delete=True)

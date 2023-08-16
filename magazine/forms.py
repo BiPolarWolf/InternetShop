@@ -13,7 +13,7 @@ class ProductCreate(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ('title','description','cat','price','discount','img')
+        fields = ('title','status_have','description','cat','price','discount','img')
 
 
 class ImageForm(forms.ModelForm):
