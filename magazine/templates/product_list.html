@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+      {% block cats %}
+
+ <ul class="list-group list-group-flush">
+   {% for cat in categories %}
+     {% if cat == cat_selected %}
+              <li class="list-group-item">{{cat.name}}</li>
+                    <ul class="list-group list-group-flush dop">
+                         {% for subcategory in cat.category_set.all %}
+                        <li class="list-group-item"><a href="{{subcategory.get_absolute_url}}">{{subcategory}}</a></li>
+                        {% endfor %}
+            </ul>
+     {% else %}
+      <li class="list-group-item"><a href="{{cat.get_absolute_url}}">{{cat.name}}</a></li>
+     {% endif %}
+   {% endfor %}
+          </ul>
+          {% endblock %}
+
+
+{% block content %}
+ <div class="products">
+            <div class="row">
+                {% for product in products %}
+
+              <div class="col-3 my-3">
+                <div class="card">
+                    {% if product.owner == request.user %}
+                <a class href="{% url 'edit_product' product.id %}"><img class="edit_button" src="https://cdn4.iconfinder.com/data/icons/basic-interface-overcolor/512/pencil-1024.png" alt="edit"></a>
+                {% endif %}
+                  <a href=""><img class="favorite_button" src="https://cdn4.iconfinder.com/data/icons/essential-collection/54/bookmark-1024.png" alt="image"></a>
+                  <a href="{{product.get_absolute_url}}">
+                      <img src="{{ product.img_url|default_if_none:'#' }}" class="card-img-top" alt="image">
+                  </a>
+                  <div class="card-body">
+                    <h5 class="card-title">{{product.title|truncatewords:3}}</h5>
+                      {%if product.discount%}
+                    <p class="card-text"><span class="active">{{product.sell_price}} тг</span>
+                        <span class="no-active">{{product.price}}тг</span></p>
+                      {% else %}
+                       <p class="card-text"><span class="active">{{product.price}} тг</span>
+                      {% endif %}
+                    <p class="card-text"><a href="#" class="btn btn-primary">В корзину </a><span>(на складе)</span></p>
+
+                  </div>
+                </div>
+              </div>
+                {% endfor %}
+          </div>
+ </div>
+{% endblock%}

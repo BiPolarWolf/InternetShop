@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="info_profile my-4">
+    <img style="width:200px;height:200px;object-fit:cover;margin:1em" src="{{profile.avatar_url }}" alt="avatar">
+<h1>{{profile.username}}</h1>
+    {% if profile.first_name%}
+<p>Имя: {{profile.first_name}} {{profile.last_name}}</p>
+    {% endif %}
+    <div class="row">
+        <h3>Продает {{ profile.product_set.all.count }} товаров</h3>
+{% for product in profile.product_set.all %}
+    <div class="col-4 my-3">
+                <div class="card">
+                     {% if product.owner == request.user %}
+                <a class href="{% url 'edit_product' product.id %}"><img class="edit_button" src="https://cdn4.iconfinder.com/data/icons/basic-interface-overcolor/512/pencil-1024.png" alt="edit"></a>
+                {% endif %}
+                  <a  href=""><img class="favorite_button" src="https://cdn4.iconfinder.com/data/icons/essential-collection/54/bookmark-1024.png" alt="image"></a>
+                  <a href="{{product.get_absolute_url}}">
+                      {% if product.img %}
+                      <img src="{{ product.img.url }}" class="card-img-top" alt="image">
+                      {% else  %}
+
+                      <p>подробнее</p>
+                  {% endif %}</a>
+                  <div class="card-body">
+                    <h5 class="card-title">{{product.title|truncatewords:3}}</h5>
+                   {%if product.discount%}
+                    <p class="card-text"><span class="active">{{product.sell_price}} тг</span>
+                        <span class="no-active">{{product.price}}тг</span></p>
+                      {% else %}
+                       <p class="card-text"><span class="active">{{product.price}} тг</span>
+                      {% endif %}
+                    <a href="#" class="btn btn-primary">В корзину </a>
+                      <span>(на складе)</span>
+                  </div>
+                </div>
+    </div>
+    {% endfor %}
+    </div>
+{% endblock %}

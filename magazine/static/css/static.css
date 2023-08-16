@@ -1,0 +1,161 @@
+a{
+    text-decoration: none;
+}
+.product>.row{
+    height: 380px;
+    margin: 0px 0 30px;
+}
+.card-img-top{
+object-fit: cover;
+    height: 300px;
+}
+
+.row>*{
+    height: 100%;
+
+}
+.row >.col-5{
+padding: 0;
+}
+.detail_image>img{
+    object-fit: cover; 
+    height: 100%;
+}
+.product-detail{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.detail_image{
+    height: 400px;
+    text-align: center;
+    margin: 0px 0 30px;
+}
+.detail_info{
+    text-align: center;
+    width: 800px;
+    margin: auto;
+}
+.info_profile {
+    text-align: center;
+}
+
+.comments-detail{
+    margin-top: 0.5em;
+    text-align: left;
+}
+
+.comments-detail li {
+    list-style-type: none;
+}
+.com p{
+margin: 0;
+}
+
+.no_have{
+    background-color: rgb(234 234 234);
+}
+.no_have_title{
+    color: rgb(124, 124, 124);
+}
+
+.favorite_button{
+    width: 40px;
+    position: absolute;
+    right: -2px;
+    bottom: 144px;
+}
+
+.favorite_button:hover{
+    width: 45px;
+    bottom: 140px;
+
+}
+
+.dop>li>a{
+    margin-left: 1em;
+    color:#5f5b98;
+}
+
+.card-title{
+height: 50px;
+}
+
+.edit_button{
+width: 35px;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    opacity: 50%;
+}
+
+.orange_buttons{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.edit_button_detail{
+  width: 65px;
+    }
+    
+    .edit_button:hover{
+        opacity: 100%;
+          }
+
+.d-flex {
+    width: 471px;
+    display: flex!important;
+    margin: 0;
+    }
+
+.collapse{
+JUSTIFY-CONTENT: space-between;}
+
+.carousel-item>img{
+margin: auto;
+ object-fit: cover;
+height:100%
+}
+
+.align-center{
+text-align: center;
+}
+
+.com_img>img{
+width:65px;
+height:65px;
+object-fit:cover;
+border-radius: 100px
+}
+
+.com_text>p{
+    margin: 0;
+}
+.com_text span{
+    background-color: #efb300;
+    padding: 0.2em;
+}
+
+.accordion-button{
+padding:0px;
+color:#efb300;
+}
+.no-active{
+text-decoration: line-through;
+color:gray;
+}
+.no-active-detail{
+text-decoration: line-through;
+color:gray;
+font-size: 2rem;
+}
+.active{
+font-weight:bold;
+font-size: 1.4em;
+}
+.active-detail{
+font-weight:bold;
+font-size: 3em;
+}

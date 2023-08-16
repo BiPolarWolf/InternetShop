@@ -1,0 +1,222 @@
+{% extends 'base.html' %} {% block cats %}
+<ul class="list-group list-group-flush">
+  {% for cat in categories %}
+  <li class="list-group-item">
+    <a href="{{cat.get_absolute_url}}">{{cat.name}}</a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %} {% block content %}
+
+<div class="product-detail">
+  <div class="container detail_image my-4">
+    <div id="carouselExampleDark" class="carousel carousel-dark slide">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img
+            src="{{product.img_url}}"
+            class="d-block"
+            alt="Картинка товара"
+          />
+        </div>
+        {% for img in product.images.all %}
+        <div class="carousel-item">
+          <img src="{{img.img.url}}" class="d-block" alt="Изображение" />
+        </div>
+        {% endfor %}
+      </div>
+
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselExampleDark"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselExampleDark"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="detail_info">
+  <div class="orange_buttons">
+    <p>
+      {% if product.owner == request.user %}
+      <a class href="{% url 'edit_product' product.id %}"
+        ><img
+          class="edit_button_detail"
+          src="https://cdn4.iconfinder.com/data/icons/basic-interface-overcolor/512/pencil-1024.png"
+          alt="edit"
+      /></a>
+      {% endif %}
+    </p>
+    <div class="previouse">
+      <a href="{{request.META.HTTP_REFERER}}"
+        ><img
+          width="70px"
+          src="https://cdn3.iconfinder.com/data/icons/arrows-25/137/Left-08-1024.png"
+          alt=""
+      /></a>
+    </div>
+  </div>
+
+  <h3 class="my-3">{{product.title}}</h3>
+  <h4>
+    Продавец :<a style="color: orange" href="{{product.owner.get_absolute_url}}"
+      >{{product.owner}}</a
+    >
+  </h4>
+  {% if product.discount %}
+  <p class="active-detail">{{product.sell_price}} тг <span class="no-active-detail">{{product.price}} тг</span></p>
+  {% else %}
+   <p class="active-detail">{{product.price}} тг</p>
+  {% endif %}
+  <p>{{product.description | linebreaks }}</p>
+
+  <p>Рейтинг : 4.9</p>
+  <p>
+    <a href="#">В корзину</a> <a href="#">Купить</a> <a href="#">В избранное</a>
+  </p>
+</div>
+<div class="comments_block px-5 container mt-5 mb-5">
+  <div class="form window">
+    <h3>Комментарии ({{product.comment_set.all.count}})</h3>
+    <form action="{% url 'add_review' product.id %}" method="post">
+      {% csrf_token %}
+      <label for="exampleFormControlTextarea1" class="form-label"
+        >Написать комментарий</label
+      >
+      <textarea
+        class="d-flex form-control"
+        id="exampleFormControlTextarea1"
+        rows="3"
+        name="text"
+      ></textarea>
+      <button type="submit" class="btn btn-primary mt-3 mb-3">Отправить</button>
+    </form>
+  </div>
+
+  <div class="user_comments">
+    {% for com in comments %}
+    {% if com.responce is None %}
+    <div class="comment-item my-4">
+      <div class="row">
+        <div class="col-1 com_img">
+          <img src="{{com.author.avatar_url}}" alt="avatar" />
+        </div>
+        <div class="col-11 com_text">
+          <p>
+            <a href="{{com.author.get_absolute_url}}">{{com.author}}</a>,
+            {{com.date}}{% if com.responce %},<span
+              >ответ для {{com.responce.author}}</span
+            >
+            {% endif %}
+          </p>
+          <p>{{com.text}}</p>
+          <div class="accordion accordion-flush" id="accordionFlushExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#flush-collapseOne{{com.id}}"
+                  aria-expanded="false"
+                  aria-controls="flush-collapseOne{{com.id}}"
+                >
+                  Ответить
+                </button>
+              </h2>
+              <div
+                id="flush-collapseOne{{com.id}}"
+                class="accordion-collapse collapse"
+                data-bs-parent="#accordionFlushExample"
+              >
+                <div class="accordion-body">
+                  <form action="{% url 'respond_review' product.id com.id %}" method="post">
+                    {% csrf_token %}
+                    <textarea
+                      class="d-flex form-control"
+                      rows="1"
+                      name="text"
+                    ></textarea>
+                    <button type="submit" class="btn btn-primary mt-3 mb-3">
+                      Отправить
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% for responced in com.comment_set.all %}
+    <div class="comment-item my-4 px-5 mx-3">
+      <div class="row">
+        <div class="col-1 com_img">
+          <img src="{{responced.author.avatar_url}}" alt="avatar" />
+        </div>
+        <div class="col-11 com_text">
+          <p>
+            <a href="{{responced.author.get_absolute_url}}">{{responced.author}}</a>,
+            {{responced.date}}{% if responced.responce %},<span
+              >ответ для {{responced.responce.author}}</span
+            >
+            {% endif %}
+          </p>
+          <p>{{responced.text}}</p>
+          <div class="accordion accordion-flush" id="accordionFlushExampleresponced">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#flush-collapseOne{{responced.id}}"
+                  aria-expanded="false"
+                  aria-controls="flush-collapseOne{{responced.id}}"
+                >
+                  Ответить
+                </button>
+              </h2>
+              <div
+                id="flush-collapseOne{{responced.id}}"
+                class="accordion-collapse collapse"
+                data-bs-parent="#accordionFlushExampleresponced"
+              >
+                <div class="accordion-body">
+                  <form action="{% url 'respond_review' product.id responced.id %}" method="post">
+                    {% csrf_token %}
+                    <textarea
+                      class="d-flex form-control"
+                      rows="1"
+                      name="text"
+                    ></textarea>
+                    <button type="submit" class="btn btn-primary mt-3 mb-3">
+                      Отправить
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
