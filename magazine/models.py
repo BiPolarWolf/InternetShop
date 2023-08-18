@@ -135,13 +135,20 @@ class CustomUser(AbstractUser):
 # модель для создания комментариев
 class Comment(models.Model):
 
-    responce = models.ForeignKey('self',on_delete=models.CASCADE,null=True,blank=True)
+    responce = models.ForeignKey('self',on_delete=models.CASCADE,null=True,blank=True,related_name='response')
     # responce поле это поле для ответа на другой комментарий и таким образом формируется связь между двумя экземплярами одной модели
 
 
     author = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='comments')
     text = models.TextField('комментарий')
     date = models.DateTimeField(auto_now=True)
 
+    class CommentManager(models.Manager):
+        def all(self):
+            """
+            Список статей (SQL запрос с фильтрацией для страницы списка статей)
+            """
+            all= self.get_queryset().select_related('author', 'product').all()
 
+            return all.prefetch_related('responce')

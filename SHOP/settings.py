@@ -39,6 +39,7 @@ INSTALLED_APPS = [
      'magazine.apps.MagazineConfig',
     'crispy_forms',
     'crispy_bootstrap5',
+    "debug_toolbar",
 
 ]
 AUTH_USER_MODEL = 'magazine.CustomUser'
@@ -47,6 +48,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -138,3 +140,10 @@ LOGOUT_REDIRECT_URL = 'home'
 CRISPY_TEMPLATE_PACK = 'Bootstrap5'
 
 # end django-crispy-form
+
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]

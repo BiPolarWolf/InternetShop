@@ -35,8 +35,13 @@ urlpatterns = [
     path('edit/<int:prod_id>',edit_product,name='edit_product'),
     path('search/',SearchResponceList.as_view(),name = 'search'),
     path('review/<int:id>',AddComment.as_view(),name='add_review'),
-    path('review/<int:prod_id>/<int:com_id>',RespondComment.as_view(),name='respond_review')
+    path('review/<int:prod_id>/<int:com_id>',RespondComment.as_view(),name='respond_review'),
 ]
 
 if settings.DEBUG:
+    urlpatterns = [
+        # ...
+        path("__debug__/", include("debug_toolbar.urls")),
+    ]+urlpatterns
+
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

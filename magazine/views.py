@@ -18,7 +18,7 @@ from .models import *
 
 # показать все посыт
 def products_all(request):
-    model = Product.objects.all()
+    model = Product.objects.select_related('owner').all()
     categories = Category.objects.filter(parent_category=None)
     context = {
         'products': model,
@@ -31,7 +31,7 @@ def products_all(request):
 
 '''показать посты для категории'''
 def products_cat(request,cat_slug):
-    model = Product.objects.filter(Q(cat__slug=cat_slug) | Q(cat__parent_category__slug=cat_slug))
+    model = Product.objects.filter(Q(cat__slug=cat_slug) | Q(cat__parent_category__slug=cat_slug)).select_related('owner')
     categories = Category.objects.filter(parent_category=None)
     cat_selected = Category.objects.get(slug=cat_slug)
     context = {
@@ -54,10 +54,15 @@ class ProductDetailView(DetailView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.filter(parent_category=None)
-        context['comments'] = Comment.objects.filter(product = self.object)
+        comments = Comment.objects.filter(product = self.object).prefetch_related('response','response__author')
+        context['comments'] = comments.select_related('author','product','responce')
         return context
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.select_related('owner','cat')
 
+        return queryset
 
 
 
@@ -106,7 +111,8 @@ def edit_product(request,prod_id):
 '''страница с профилем'''
 def profile(request,user_id):
     profile = CustomUser.objects.get(id=user_id)
-    return render(request,'profile.html',{'profile':profile})
+    products = Product.objects.select_related('owner').filter(owner=profile)
+    return render(request,'profile.html',{'profile':profile,'products':products})
 
 
 

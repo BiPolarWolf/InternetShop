@@ -8,8 +8,8 @@
 <p>Имя: {{profile.first_name}} {{profile.last_name}}</p>
     {% endif %}
     <div class="row">
-        <h3>Продает {{ profile.product_set.all.count }} товаров</h3>
-{% for product in profile.product_set.all %}
+        <h3>Продает {{ products.count }} товаров</h3>
+{% for product in products %}
     <div class="col-4 my-3">
                 <div class="card">
                      {% if product.owner == request.user %}
