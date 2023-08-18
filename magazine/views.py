@@ -151,6 +151,12 @@ class AddComment(View):
             return HttpResponseRedirect('/')
 
 
+class DeleteProduct(View):
+    def post(self,request,product_id):
+        post = Product.objects.get(id = product_id)
+        if request.method == 'POST':
+            post.delete()
+            return redirect('/')
 
 
 
@@ -203,3 +209,12 @@ def post(request):
     return render(request,'add_product.html',{'postForm':postform,'formset':formset})
 
 
+@login_required
+def delete_post(request, product_slug):
+    product = get_object_or_404(Product, id=product_slug, author=request.user)
+
+    if request.method == 'POST':
+        product.delete()
+        return redirect('post_list')  # Перенаправляем на список постов после удаления
+
+    return render(request, 'delete_post.html', {'product': product})

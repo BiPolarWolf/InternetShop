@@ -21,7 +21,7 @@ from django.contrib.auth import urls
 
 from SHOP import settings
 from magazine.views import products_all, ProductDetailView, products_cat, SignUpView, profile, \
-    edit_product, SearchResponceList, AddComment, RespondComment, post
+    edit_product, SearchResponceList, AddComment, RespondComment, post, DeleteProduct
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,6 +35,7 @@ urlpatterns = [
     path('edit/<int:prod_id>',edit_product,name='edit_product'),
     path('search/',SearchResponceList.as_view(),name = 'search'),
     path('review/<int:id>',AddComment.as_view(),name='add_review'),
+    path('delete/<int:product_id>',DeleteProduct.as_view(),name='delete_product'),
     path('review/<int:prod_id>/<int:com_id>',RespondComment.as_view(),name='respond_review'),
 ]
 

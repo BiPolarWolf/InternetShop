@@ -17,11 +17,14 @@ class MagazineViewTest(TestCase):
         Category.objects.create(name='sport',parent_category=None,slug='sport')
         Category.objects.create(name='winter', parent_category=Category.objects.get(id=1))
         sport_cat = Category.objects.get(id=1)
-        Product.objects.create(title='sport clothes',description='sport clothes for all your family',
+        prod = Product.objects.create(title='sport clothes',description='sport clothes for all your family',
                                cat=sport_cat,owner=user,price=200)
         Product.objects.create(title='book Steven King', description='all about book',
                                cat=sport_cat, owner=user, price=200)
 
+        com1 = Comment.objects.create(text='blabla',author=user,responce=None,product =prod)
+
+        com2 = Comment.objects.create(text='lalala', author=user, responce=com1, product=prod)
     #Проверка на выдачу главной страницы со всеми товарами
     def test_home(self):
         responce=self.client.get('/')
@@ -35,12 +38,14 @@ class MagazineViewTest(TestCase):
         self.assertIn('sport clothes',responce.content.decode())
         self.assertIn('winter',responce.content.decode())
 
-    # проверка выдачи страницы для одного продукта с описанием
+    # проверка выдачи страницы для одного продукта с описанием и комментарием
     def test_product_detail(self):
-        responce = self.client.get('/product/sport-clothes')
+        prod = Product.objects.get(title='sport clothes')
+        responce = self.client.get(f'/product/{prod.slug}') # сейчас слаг у нас генерируется с рандомным числом
         self.assertEquals(responce.status_code,200)
         self.assertIn('sport clothes for all your family', responce.content.decode())
-
+        self.assertIn('blabla', responce.content.decode())
+        self.assertIn('lala', responce.content.decode())
     # проверка работы переодесации при успешном введение данных в странице login
     # проверка выдачи страницы авторизации
     def test_login_True(self):
@@ -112,26 +117,4 @@ class MagazineViewTest(TestCase):
         responce = client.get(f"/profile/2/")
         self.assertEquals(responce.status_code,200)
         self.assertIn('snegir',responce.content.decode())
-'''
-    def test_form_submission(self):
-        # Создаем объект для тестирования
-        test_data = {
-            'title': 'TestProduct',
-            'description': 'aboutTestProduct',
-            'cat': 'value2',
-            'price': 'value2',
-            'discount': 'value2',
-            'img': 'value2',
-            # ...
-        }
-        response = self.client.post(reverse('your-view-name'), test_data)
 
-        # Проверяем, что объект был создан
-        self.assertEqual(response.status_code, 200)  # Проверяем статус код
-        self.assertTrue(YourModel.objects.filter(field1='value1').exists())  # Проверяем создание объекта
-
-        # Проверяем, что форма отображается на странице
-        self.assertIsInstance(response.context['form'], YourForm)
-
-        # Проверяем, что после успешной отправки формы перенаправление происходит на нужную страницу
-        self.assertRedirects(response, reverse('success-view-name'))'''
