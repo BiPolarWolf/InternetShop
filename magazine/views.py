@@ -146,10 +146,9 @@ class AddComment(View):
             form.author = request.user
             form.product_id = id
             form.save()
-            return redirect('/')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
-            return HttpResponseRedirect('/')
-
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class DeleteProduct(View):
     def post(self,request,product_id):
@@ -170,9 +169,9 @@ class RespondComment(View):
             form.product_id = prod_id
             form.responce_id = com_id
             form.save()
-            return redirect('/')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 
